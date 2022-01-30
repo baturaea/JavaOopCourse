@@ -1,6 +1,7 @@
 package ru.baturaea2022.range_main;
 
 import ru.baturaea2022.range.Range;
+
 import java.util.Scanner;
 
 public class Main {
@@ -29,5 +30,6 @@ public class Main {
 
         System.out.printf("Длинна нового диапазона от %.2f до %.2f равна %.2f%n", range.getFrom(), range.getTo(), range.getLength());
         checkingResult = range.isInside(checkNumber) ? "входит в новый диапазон" : "не входит в новый диапазон";
-        System.out.printf("Число %.2f %s%n", checkNumber, checkingResult);    }
+        System.out.printf("Число %.2f %s%n", checkNumber, checkingResult);
+    }
 }
