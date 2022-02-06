@@ -1,7 +1,5 @@
 package ru.baturaea2022.shape;
 
-import java.util.Arrays;
-
 public class Triangle implements Shape {
     private double x1;
     private double y1;
@@ -67,44 +65,37 @@ public class Triangle implements Shape {
         this.y3 = y3;
     }
 
+    private double getSideLength(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+
     @Override
     public double getWidth() {
-        double xMin = Math.min(Math.min(x1, x2), x3);
-        double xMax = Math.max(Math.max(x1, x2), x3);
-        return xMax - xMin;
+        return Math.max(Math.max(x1, x2), x3) - Math.min(Math.min(x1, x2), x3);
     }
 
     @Override
     public double getHeight() {
-        double xMin = Math.min(Math.min(y1, y2), y3);
-        double xMax = Math.max(Math.max(y1, y2), y3);
-
-        return xMax - xMin;
+        return Math.max(Math.max(y1, y2), y3) - Math.min(Math.min(y1, y2), y3);
     }
 
     @Override
     public double getPerimeter() {
-        double triangleSide1Length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        double triangleSide2Length = Math.sqrt(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2));
-        double triangleSide3Length = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));
-
-        return triangleSide1Length + triangleSide2Length + triangleSide3Length;
+        return getSideLength(x1, y1, x2, y2) + getSideLength(x2, y2, x3, y3) + getSideLength(x1, y1, x3, y3);
     }
 
     @Override
     public double getArea() {
-        double triangleSide1Length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        double triangleSide2Length = Math.sqrt(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2));
-        double triangleSide3Length = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));
-        double semiPerimeter = (triangleSide1Length + triangleSide2Length + triangleSide3Length) / 2;
+        double semiPerimeter = getPerimeter() / 2;
 
-        return Math.sqrt(semiPerimeter * (semiPerimeter - triangleSide1Length) *
-                (semiPerimeter - triangleSide2Length) * (semiPerimeter - triangleSide3Length));
+        return Math.sqrt(semiPerimeter * (semiPerimeter - getSideLength(x1, y1, x2, y2)) *
+                (semiPerimeter - getSideLength(x2, y2, x3, y3)) * (semiPerimeter - getSideLength(x1, y1, x3, y3)));
     }
 
     @Override
     public String toString() {
-        return "Треугольник," + Arrays.toString(new double[]{getWidth(), getHeight(), getArea(), getPerimeter()});
+        return "Треугольник(Площадь = " + getArea()
+                + "; Вершины {" + x1 + ", " + y1 + "}, {" + x2 + ", " + y2 + "}, {" + x3 + ", " + y3 + "})";
     }
 
     @Override
@@ -115,15 +106,16 @@ public class Triangle implements Shape {
         if (o == null || o.getClass() != getClass()) {
             return false;
         }
-        Triangle p = (Triangle) o;
+        Triangle shape = (Triangle) o;
 
-        return x1 == p.x1 && y1 == p.y1 && x2 == p.x2 && y2 == p.y2 && x3 == p.x3 && y3 == p.y3;
+        return x1 == shape.x1 && y1 == shape.y1 && x2 == shape.x2 && y2 == shape.y2 && x3 == shape.x3 && y3 == shape.y3;
     }
 
     @Override
     public int hashCode() {
         final int prime = 19;
         int hash = 1;
+
         hash = prime * hash + Double.hashCode(x1);
         hash = prime * hash + Double.hashCode(y1);
         hash = prime * hash + Double.hashCode(x2);

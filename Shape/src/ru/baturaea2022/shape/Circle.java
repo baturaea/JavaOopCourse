@@ -1,7 +1,5 @@
 package ru.baturaea2022.shape;
 
-import java.util.Arrays;
-
 public class Circle implements Shape {
     private double radius;
 
@@ -19,17 +17,17 @@ public class Circle implements Shape {
 
     @Override
     public double getWidth() {
-        return this.radius * 2;
+        return radius * 2;
     }
 
     @Override
     public double getHeight() {
-        return this.radius * 2;
+        return radius * 2;
     }
 
     @Override
     public double getArea() {
-        return Math.PI * Math.pow(this.radius, 2);
+        return Math.PI * radius * radius;
     }
 
     @Override
@@ -39,7 +37,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "Круг," + Arrays.toString(new double[]{getWidth(), getHeight(), getArea(), getPerimeter()});
+        return "Круг(Площадь = " + getArea() + "; Радиус = " + getWidth() + ")";
     }
 
     @Override
@@ -50,15 +48,16 @@ public class Circle implements Shape {
         if (o == null || o.getClass() != getClass()) {
             return false;
         }
-        Circle p = (Circle) o;
+        Circle shape = (Circle) o;
 
-        return radius == p.radius;
+        return radius == shape.radius;
     }
 
     @Override
     public int hashCode() {
         final int prime = 19;
         int hash = 1;
+
         hash = prime * hash + Double.hashCode(radius);
 
         return hash;

@@ -1,12 +1,10 @@
 package ru.baturaea2022.shape;
 
-import java.util.Arrays;
-
 public class Square implements Shape {
     private double sideLength;
 
-    public Square(double side) {
-        this.sideLength = side;
+    public Square(double sideLength) {
+        this.sideLength = sideLength;
     }
 
     public double getSideLength() {
@@ -19,27 +17,27 @@ public class Square implements Shape {
 
     @Override
     public double getWidth() {
-        return this.sideLength;
+        return sideLength;
     }
 
     @Override
     public double getHeight() {
-        return this.sideLength;
+        return sideLength;
     }
 
     @Override
     public double getArea() {
-        return this.sideLength * this.sideLength;
+        return sideLength * sideLength;
     }
 
     @Override
     public double getPerimeter() {
-        return this.sideLength * 4;
+        return sideLength * 4;
     }
 
     @Override
     public String toString() {
-        return "Квадрат," + Arrays.toString(new double[]{getWidth(), getHeight(), getArea(), getPerimeter()});
+        return "Квадрат(Площадь = " + getArea() + "; Длинна стороны = " + getWidth() + ")";
     }
 
     @Override
@@ -50,15 +48,17 @@ public class Square implements Shape {
         if (o == null || o.getClass() != getClass()) {
             return false;
         }
-        Square p = (Square) o;
 
-        return sideLength == p.sideLength;
+        Square shape = (Square) o;
+
+        return sideLength == shape.sideLength;
     }
 
     @Override
     public int hashCode() {
         final int prime = 19;
         int hash = 1;
+
         hash = prime * hash + Double.hashCode(sideLength);
 
         return hash;
