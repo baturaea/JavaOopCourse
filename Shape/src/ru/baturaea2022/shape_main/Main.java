@@ -11,7 +11,11 @@ public class Main {
             throw new IllegalArgumentException("Array can’t be empty");
         }
 
-        Arrays.sort(array, Comparator.comparing(Shape::getArea));
+        AreaComparator comparator = new AreaComparator();
+        Arrays.sort(array, comparator);
+
+        //Альтернативная сортировка
+        //Arrays.sort(array, Comparator.comparing(Shape::getArea));
 
         return array[array.length - 1];
     }
@@ -21,15 +25,19 @@ public class Main {
             throw new IllegalArgumentException("Array can’t be empty");
         }
 
-        Arrays.sort(array, Comparator.comparing(Shape::getPerimeter));
+        PerimeterComparator comparator = new PerimeterComparator();
+        Arrays.sort(array, comparator);
+
+        //Альтернативная сортировка
+        //Arrays.sort(array, Comparator.comparing(Shape::getPerimeter));
 
         return array[array.length - 2];
     }
 
     public static void main(String[] args) {
         Shape[] arrayShapes = {
-                new Square(15.2),
-                new Triangle(1, 1, 5, 0, -2, -5),
+                new Square(1.2),
+                new Triangle(3, 3, 5, 0, -2, -5),
                 new Rectangle(3.1, 8.7),
                 new Circle(2.3),
                 new Square(6.5),
@@ -57,7 +65,7 @@ public class Main {
 
         System.out.println("===================");
         Shape shape2 = getSecondPerimeterShape(arrayShapes);
-        System.out.printf("Фигура со вторым по величине периметром: %s%n", shape2);
+        System.out.printf("Фигура со вторым по величине периметром = %f у фигуры: %s%n", shape2.getPerimeter(), shape2);
 
         System.out.println("===================");
         System.out.println("Переопределенный toString():");
