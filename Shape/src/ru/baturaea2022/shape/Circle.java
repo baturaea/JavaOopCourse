@@ -32,12 +32,12 @@ public class Circle implements Shape {
 
     @Override
     public double getPerimeter() {
-        return 2 * Math.PI * this.radius;
+        return 2 * Math.PI * radius;
     }
 
     @Override
     public String toString() {
-        return "Круг(Площадь = " + getArea() + "; Радиус = " + getWidth() + ")";
+        return "Круг: Радиус = " + getWidth() + "; Площадь = " + getArea() + "; Периметр = " + getPerimeter();
     }
 
     @Override
@@ -45,9 +45,11 @@ public class Circle implements Shape {
         if (o == this) {
             return true;
         }
+
         if (o == null || o.getClass() != getClass()) {
             return false;
         }
+
         Circle shape = (Circle) o;
 
         return radius == shape.radius;

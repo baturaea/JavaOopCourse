@@ -47,8 +47,8 @@ public class Rectangle implements Shape {
 
     @Override
     public String toString() {
-        return "Прямоугольник(Площадь = " + getArea()
-                + "; Ширина = " + getWidth() + "; Высота = " + getHeight() + ")";
+        return "Прямоугольник: Ширина = " + getWidth() + "; Высота = " + getHeight() + "; Площадь = " + getArea()
+                + "; Периметр = " + getPerimeter();
     }
 
     @Override
@@ -56,9 +56,11 @@ public class Rectangle implements Shape {
         if (o == this) {
             return true;
         }
+
         if (o == null || o.getClass() != getClass()) {
             return false;
         }
+
         Rectangle shape = (Rectangle) o;
 
         return width == shape.width && height == shape.height;
