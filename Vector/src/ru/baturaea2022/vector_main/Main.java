@@ -24,27 +24,27 @@ public class Main {
         System.out.printf("%d%n", vector3.getSize());
 
         System.out.println("===================vector2.addVector(vector3)");
-        vector2.addVector(vector3);
+        vector2.add(vector3);
         System.out.printf("%s%n", vector2);
 
         System.out.println("===================vector3.reversalVector()");
-        vector3.reversalVector();
+        vector3.expand();
         System.out.printf("%s%n", vector3);
         System.out.println("===================vector3.multiplyVector(2)");
-        vector3.multiplyVector(2);
+        vector3.multiplyScalar(2);
         System.out.printf("Результат умножения равен %s%n", vector3);
         System.out.println("===================vector2.subtractVector(vector3)");
-        vector2.subtractVector(vector3);
+        vector2.subtract(vector3);
         System.out.printf("Результат вычитания равен %s%n", vector2);
 
         System.out.println("===================vector3.getLengthVector()");
-        System.out.printf("%f%n", vector3.getLengthVector());
+        System.out.printf("%f%n", vector3.getLength());
 
         System.out.println("===================static methods");
-        Vector vector5 = Vector.getSumVectors(vector1, vector3);
+        Vector vector5 = Vector.getSum(vector1, vector3);
         System.out.printf("getSumVectors(vector1 = %s, vector3 = %s) = %s%n", vector1, vector3, vector5);
 
-        Vector vector6 = Vector.getSubtractVectors(vector3, vector2);
+        Vector vector6 = Vector.getDiff(vector3, vector2);
         System.out.printf("getSubtractVectors(vector3 = %s, vector2 = %s) = %s%n", vector3, vector2, vector6);
 
         System.out.println("getScalarProduct");
