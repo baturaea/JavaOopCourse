@@ -68,8 +68,8 @@ public class Main {
         }
 
         System.out.println("+++++++++check getDifference+++++++++");
-        for (int i = 0; i < 9 ; i++) {
-            Range rangeI = new Range( i, i + 3);
+        for (int i = 0; i < 9; i++) {
+            Range rangeI = new Range(i, i + 3);
             System.out.printf("range2 = %s; rangeI = %s%n", range2, rangeI);
             System.out.printf("Difference - %s%n", rangeArrayStr(range2.getDifference(rangeI)));
         }
