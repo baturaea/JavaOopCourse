@@ -159,6 +159,7 @@ public class Vector {
             str.append(components[i]);
             str.append(",");
         }
+
         str.append(components[components.length - 1]);
         str.append("}");
 

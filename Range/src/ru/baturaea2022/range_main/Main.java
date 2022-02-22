@@ -5,22 +5,38 @@ import ru.baturaea2022.range.Range;
 import java.util.Scanner;
 
 public class Main {
+    private static String rangeArrayStr(Range[] array) {
+        StringBuilder str = new StringBuilder("[");
+        if (array.length != 0) {
+            for (int i = 0; i < array.length - 1; i++) {
+                str.append(array[i]);
+                str.append(",");
+            }
+
+            str.append(array[array.length - 1]);
+        }
+
+        str.append("]");
+
+        return str.toString();
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Укажите начало диапазона: ");
-        double fromNumber = scanner.nextDouble();
+        double from = scanner.nextDouble();
 
         System.out.print("Укажите конец диапазона: ");
-        double toNumber = scanner.nextDouble();
+        double to = scanner.nextDouble();
 
         System.out.print("Укажите число для проверки вхождения в диапазон: ");
         double checkNumber = scanner.nextDouble();
 
-        Range range1 = new Range(fromNumber, toNumber);
+        Range range1 = new Range(from, to);
         System.out.printf("Длинна диапазона от %.2f до %.2f равна %.2f%n", range1.getFrom(), range1.getTo(), range1.getLength());
-        String checkingResult = range1.isInside(checkNumber) ? "входит в указанный диапазон" : "не входит в указанный диапазон";
-        System.out.printf("Число %.2f %s%n", checkNumber, checkingResult);
+        String isInside = range1.isInside(checkNumber) ? "входит в указанный диапазон" : "не входит в указанный диапазон";
+        System.out.printf("Число %.2f %s%n", checkNumber, isInside);
 
         System.out.print("Измените начало диапазона: ");
         range1.setFrom(scanner.nextDouble());
@@ -29,31 +45,33 @@ public class Main {
         range1.setTo(scanner.nextDouble());
 
         System.out.printf("Длинна нового диапазона от %.2f до %.2f равна %.2f%n", range1.getFrom(), range1.getTo(), range1.getLength());
-        checkingResult = range1.isInside(checkNumber) ? "входит в новый диапазон" : "не входит в новый диапазон";
-        System.out.printf("Число %.2f %s%n", checkNumber, checkingResult);
+        isInside = range1.isInside(checkNumber) ? "входит в новый диапазон" : "не входит в новый диапазон";
+        System.out.printf("Число %.2f %s%n", checkNumber, isInside);
 
-        Range range2 = new Range(1, 2);
+        Range range2 = new Range(4, 7);
         Range range3 = new Range(4, 6);
 
-        System.out.printf("range2 - {%f, %f}, range3 - {%f, %f}%n", range2.getFrom(), range2.getTo(), range3.getFrom(), range3.getTo());
+        System.out.printf("range2 - %s, range3 - %s%n", range2, range3);
 
-        Range range4 = range2.getIntersection(range3);
-        if (range4 != null) {
-            System.out.printf("range2.getIntersection(range3) = {%f, %f}%n", range4.getFrom(), range4.getTo());
-        } else {
-            System.out.println("range2 и range3 не пересекаются => range4 = null");
+        System.out.println("+++++++++check getIntersection+++++++++");
+        for (int i = 0; i < 7; i++) {
+            Range rangeI = new Range(2 + i, 3 + i);
+            System.out.printf("range2 = %s; rangeI = %s%n", range2, rangeI);
+            System.out.printf("Intersection - %s%n", range2.getIntersection(rangeI));
         }
 
-        System.out.println("range2.getUnion(range3)");
-        Range[] arrayRanges1 = range2.getUnion(range3);
-        for (Range r : arrayRanges1) {
-            System.out.printf("range - {%f, %f}%n", r.getFrom(), r.getTo());
+        System.out.println("+++++++++check getUnion+++++++++");
+        for (int i = 1; i < 8; i++) {
+            Range rangeI = new Range(1 + i, 2 + i);
+            System.out.printf("range2 = %s; rangeI = %s%n", range2, rangeI);
+            System.out.printf("Union - %s%n", rangeArrayStr(range2.getUnion(rangeI)));
         }
 
-        System.out.println("range2.getDifference(range3)");
-        Range[] arrayRanges2 = range2.getDifference(range3);
-        for (Range r : arrayRanges2) {
-            System.out.printf("range - {%f, %f}%n", r.getFrom(), r.getTo());
+        System.out.println("+++++++++check getDifference+++++++++");
+        for (int i = 0; i < 9 ; i++) {
+            Range rangeI = new Range( i, i + 3);
+            System.out.printf("range2 = %s; rangeI = %s%n", range2, rangeI);
+            System.out.printf("Difference - %s%n", rangeArrayStr(range2.getDifference(rangeI)));
         }
     }
 }
