@@ -9,19 +9,11 @@ public class Rectangle implements Shape {
         this.height = height;
     }
 
-    public double getWidthLength() {
-        return width;
-    }
-
-    public void setWidthLength(double width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
-    public double getHeightLength() {
-        return height;
-    }
-
-    public void setHeightLength(double height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
@@ -47,8 +39,8 @@ public class Rectangle implements Shape {
 
     @Override
     public String toString() {
-        return "Прямоугольник: Ширина = " + getWidth() + "; Высота = " + getHeight() + "; Площадь = " + getArea()
-                + "; Периметр = " + getPerimeter();
+        return "Прямоугольник: Ширина = " + width + "; Высота = " + height + "; Площадь = " + getArea()
+                + "; Периметр = " + getPerimeter() + ".";
     }
 
     @Override
@@ -61,9 +53,9 @@ public class Rectangle implements Shape {
             return false;
         }
 
-        Rectangle shape = (Rectangle) o;
+        Rectangle rectangle = (Rectangle) o;
 
-        return width == shape.width && height == shape.height;
+        return width == rectangle.width && height == rectangle.height;
     }
 
     @Override

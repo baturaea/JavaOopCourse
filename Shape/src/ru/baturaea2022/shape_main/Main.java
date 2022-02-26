@@ -20,7 +20,7 @@ public class Main {
 
     public static Shape getSecondPerimeterShape(Shape[] array) {
         if (array.length < 2) {
-            throw new IllegalArgumentException("Array must have more than 2 elements" + Arrays.toString(array));
+            throw new IllegalArgumentException("Array must have more than 2 elements " + Arrays.toString(array));
         }
 
         Arrays.sort(array, new PerimeterComparator());

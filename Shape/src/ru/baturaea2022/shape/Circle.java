@@ -37,7 +37,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "Круг: Радиус = " + getWidth() + "; Площадь = " + getArea() + "; Периметр = " + getPerimeter();
+        return "Круг: Радиус = " + radius + "; Площадь = " + getArea() + "; Периметр = " + getPerimeter() + ".";
     }
 
     @Override
@@ -50,9 +50,9 @@ public class Circle implements Shape {
             return false;
         }
 
-        Circle shape = (Circle) o;
+        Circle circle = (Circle) o;
 
-        return radius == shape.radius;
+        return radius == circle.radius;
     }
 
     @Override

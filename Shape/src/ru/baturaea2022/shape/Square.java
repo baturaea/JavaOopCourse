@@ -37,8 +37,8 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return "Квадрат: Длинна стороны = " + getWidth() + "; Площадь = " + getArea()
-                + "; Периметр = " + getPerimeter();
+        return "Квадрат: Длинна стороны = " + sideLength + "; Площадь = " + getArea()
+                + "; Периметр = " + getPerimeter() + ".";
     }
 
     @Override
@@ -51,9 +51,9 @@ public class Square implements Shape {
             return false;
         }
 
-        Square shape = (Square) o;
+        Square square = (Square) o;
 
-        return sideLength == shape.sideLength;
+        return sideLength == square.sideLength;
     }
 
     @Override
