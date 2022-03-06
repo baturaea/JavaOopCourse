@@ -5,20 +5,23 @@ import ru.baturaea2022.range.Range;
 import java.util.Scanner;
 
 public class Main {
-    private static String rangeArrayStr(Range[] array) {
-        StringBuilder str = new StringBuilder("[");
-        if (array.length != 0) {
-            for (int i = 0; i < array.length - 1; i++) {
-                str.append(array[i]);
-                str.append(",");
-            }
+    private static String getRangesArrayString(Range[] array) {
+        StringBuilder builder = new StringBuilder("[");
+        if (array.length == 0) {
+            builder.append("]");
 
-            str.append(array[array.length - 1]);
+            return builder.toString();
         }
 
-        str.append("]");
+        for (int i = 0; i < array.length - 1; i++) {
+            builder.append(array[i]);
+            builder.append(",");
+        }
 
-        return str.toString();
+        builder.append(array[array.length - 1]);
+        builder.append("]");
+
+        return builder.toString();
     }
 
     public static void main(String[] args) {
@@ -64,14 +67,14 @@ public class Main {
         for (int i = 1; i < 8; i++) {
             Range rangeI = new Range(1 + i, 2 + i);
             System.out.printf("range2 = %s; rangeI = %s%n", range2, rangeI);
-            System.out.printf("Union - %s%n", rangeArrayStr(range2.getUnion(rangeI)));
+            System.out.printf("Union - %s%n", getRangesArrayString(range2.getUnion(rangeI)));
         }
 
         System.out.println("+++++++++check getDifference+++++++++");
         for (int i = 0; i < 9; i++) {
             Range rangeI = new Range(i, i + 3);
             System.out.printf("range2 = %s; rangeI = %s%n", range2, rangeI);
-            System.out.printf("Difference - %s%n", rangeArrayStr(range2.getDifference(rangeI)));
+            System.out.printf("Difference - %s%n", getRangesArrayString(range2.getDifference(rangeI)));
         }
     }
 }
