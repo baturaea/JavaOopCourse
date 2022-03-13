@@ -15,7 +15,7 @@ public class Vector {
 
     public Vector(Vector vector) {
         if (vector == null) {
-            throw new IllegalArgumentException("Wrong argument " + null);
+            throw new IllegalArgumentException("Wrong argument vector = null.");
         }
 
         components = Arrays.copyOf(vector.components, vector.components.length);
@@ -23,7 +23,7 @@ public class Vector {
 
     public Vector(double[] array) {
         if (array.length == 0) {
-            throw new IllegalArgumentException("Array size is incorrect - " + array.length);
+            throw new IllegalArgumentException("Array size = " + array.length + ", can't be = 0");
         }
 
         components = Arrays.copyOf(array, array.length);
@@ -31,18 +31,15 @@ public class Vector {
 
     public Vector(int size, double... array) {
         if (size <= 0) {
-            throw new IllegalArgumentException("Vector size is incorrect - " + size);
+            throw new IllegalArgumentException("Vector size = " + size + " can't be <= 0");
         }
 
-        components = new double[size];
-        if (array.length > 0) {
-            components = Arrays.copyOf(array, array.length);
-        }
+        components = Arrays.copyOf(array, size);
     }
 
     public double getComponent(int index) {
         if (index < 0 || index >= components.length) {
-            throw new ArrayIndexOutOfBoundsException("Component index = " + index
+            throw new IllegalArgumentException("Component index = " + index
                     + ", must be 0 or greater but less " + components.length);
         }
 
@@ -51,7 +48,7 @@ public class Vector {
 
     public void setComponent(int index, double component) {
         if (index < 0 || index >= components.length) {
-            throw new ArrayIndexOutOfBoundsException("Component index = " + index
+            throw new IllegalArgumentException("Component index = " + index
                     + " must be 0 or greater but less " + components.length);
         }
 
@@ -64,40 +61,48 @@ public class Vector {
 
     public void add(Vector vector) {
         if (vector == null) {
-            throw new IllegalArgumentException("Wrong argument");
+            throw new IllegalArgumentException("Wrong argument vector = null.");
         }
 
         if (components.length < vector.components.length) {
             components = Arrays.copyOf(components, vector.components.length);
-        }
 
-        for (int i = 0; i < Math.min(vector.components.length, components.length); i++) {
-            components[i] += vector.components[i];
+            for (int i = 0; i < components.length; i++) {
+                components[i] += vector.components[i];
+            }
+        } else {
+            for (int i = 0; i < vector.components.length; i++) {
+                components[i] += vector.components[i];
+            }
         }
     }
 
     public void subtract(Vector vector) {
         if (vector == null) {
-            throw new IllegalArgumentException("Wrong argument");
+            throw new IllegalArgumentException("Wrong argument vector = null.");
         }
 
         if (components.length < vector.components.length) {
             components = Arrays.copyOf(components, vector.components.length);
-        }
 
-        for (int i = 0; i < Math.min(vector.components.length, components.length); i++) {
-            components[i] -= vector.components[i];
+            for (int i = 0; i < components.length; i++) {
+                components[i] -= vector.components[i];
+            }
+        } else {
+            for (int i = 0; i < vector.components.length; i++) {
+                components[i] -= vector.components[i];
+            }
         }
     }
 
-    public void multiplyScalar(double scalar) {
+    public void multiplyByScalar(double scalar) {
         for (int i = 0; i < components.length; i++) {
             components[i] *= scalar;
         }
     }
 
-    public void expand() {
-        this.multiplyScalar(-1);
+    public void rotate() {
+        multiplyByScalar(-1);
     }
 
     public double getLength() {
@@ -111,40 +116,48 @@ public class Vector {
     }
 
     public static Vector getSum(Vector vector1, Vector vector2) {
-        if (vector1 == null || vector1.getClass() != Vector.class
-                || vector2 == null || vector2.getClass() != Vector.class) {
-            throw new IllegalArgumentException("Wrong argument");
+        if (vector1 == null) {
+            throw new IllegalArgumentException("Wrong argument vector1 = null");
         }
 
-        Vector resultVector = new Vector(vector1.getSize() > vector2.getSize() ? vector1 : vector2);
-        resultVector.add(vector1.getSize() > vector2.getSize() ? vector2 : vector1);
+        if (vector2 == null) {
+            throw new IllegalArgumentException("Wrong argument vector2 = null");
+        }
+
+        Vector resultVector = new Vector(vector1);
+        resultVector.add(vector2);
 
         return resultVector;
     }
 
-    public static Vector getDiff(Vector vector1, Vector vector2) {
-        if (vector1 == null || vector1.getClass() != Vector.class
-                || vector2 == null || vector2.getClass() != Vector.class) {
-            throw new IllegalArgumentException("Wrong first argument");
+    public static Vector getDifference(Vector vector1, Vector vector2) {
+        if (vector1 == null) {
+            throw new IllegalArgumentException("Wrong argument vector1 = null");
         }
 
-        Vector resultVector = new Vector(Math.max(vector1.getSize(), vector2.getSize()));
+        if (vector2 == null) {
+            throw new IllegalArgumentException("Wrong argument vector2 = null");
+        }
 
-        resultVector.add(vector2);
-        resultVector.subtract(vector1);
+        Vector resultVector = new Vector(vector1);
+        resultVector.subtract(vector2);
 
         return resultVector;
     }
 
     public static double getScalarProduct(Vector vector1, Vector vector2) {
-        if (vector1 == null || vector1.getClass() != Vector.class
-                || vector2 == null || vector2.getClass() != Vector.class) {
-            throw new IllegalArgumentException("Wrong first argument");
+        if (vector1 == null) {
+            throw new IllegalArgumentException("Wrong argument vector1 = null");
+        }
+
+        if (vector2 == null) {
+            throw new IllegalArgumentException("Wrong argument vector2 = null");
         }
 
         double scalar = 0;
+        int minLength = Math.min(vector1.components.length, vector2.components.length);
 
-        for (int i = 0; i < Math.min(vector1.components.length, vector2.components.length); i++) {
+        for (int i = 0; i < minLength; i++) {
             scalar += vector1.components[i] * vector2.components[i];
         }
 
@@ -153,17 +166,17 @@ public class Vector {
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder("{");
+        StringBuilder builder = new StringBuilder("{");
 
         for (int i = 0; i < components.length - 1; i++) {
-            str.append(components[i]);
-            str.append(",");
+            builder.append(components[i]);
+            builder.append(", ");
         }
 
-        str.append(components[components.length - 1]);
-        str.append("}");
+        builder.append(components[components.length - 1]);
+        builder.append("}");
 
-        return str.toString();
+        return builder.toString();
     }
 
     @Override
@@ -171,9 +184,11 @@ public class Vector {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         Vector vector = (Vector) o;
 
         return Arrays.equals(components, vector.components);

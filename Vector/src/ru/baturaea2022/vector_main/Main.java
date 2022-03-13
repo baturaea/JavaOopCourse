@@ -28,10 +28,10 @@ public class Main {
         System.out.printf("%s%n", vector2);
 
         System.out.println("===================vector3.reversalVector()");
-        vector3.expand();
+        vector3.rotate();
         System.out.printf("%s%n", vector3);
         System.out.println("===================vector3.multiplyVector(2)");
-        vector3.multiplyScalar(2);
+        vector3.multiplyByScalar(2);
         System.out.printf("Результат умножения равен %s%n", vector3);
         System.out.println("===================vector2.subtractVector(vector3)");
         vector2.subtract(vector3);
@@ -44,13 +44,13 @@ public class Main {
         Vector vector5 = Vector.getSum(vector1, vector3);
         System.out.printf("getSumVectors(vector1 = %s, vector3 = %s) = %s%n", vector1, vector3, vector5);
 
-        Vector vector6 = Vector.getDiff(vector3, vector2);
+        Vector vector6 = Vector.getDifference(vector3, vector2);
         System.out.printf("getSubtractVectors(vector3 = %s, vector2 = %s) = %s%n", vector3, vector2, vector6);
 
         System.out.println("getScalarProduct");
-        System.out.printf("Скалярное произведене vector1 = %s и vector2 = %s равно %f%n",
+        System.out.printf("Скалярное произведение vector1 = %s и vector2 = %s равно %f%n",
                 vector1, vector2, Vector.getScalarProduct(vector1, vector2));
-        System.out.printf("Скалярное произведене vector5 = %s и vector4 = %s равно %f%n",
+        System.out.printf("Скалярное произведение vector5 = %s и vector4 = %s равно %f%n",
                 vector5, vector4, Vector.getScalarProduct(vector5, vector4));
     }
 }

@@ -26,6 +26,8 @@ public class Triangle implements Shape {
 
     public void setX1(double x1) {
         this.x1 = x1;
+        sideArray[0] = getSideLength(x1, y1, x2, y2);
+        sideArray[2] = getSideLength(x1, y1, x3, y3);
     }
 
     public double getY1() {
@@ -34,6 +36,8 @@ public class Triangle implements Shape {
 
     public void setY1(double y1) {
         this.y1 = y1;
+        sideArray[0] = getSideLength(x1, y1, x2, y2);
+        sideArray[2] = getSideLength(x1, y1, x3, y3);
     }
 
     public double getX2() {
@@ -42,6 +46,8 @@ public class Triangle implements Shape {
 
     public void setX2(double x2) {
         this.x2 = x2;
+        sideArray[0] = getSideLength(x1, y1, x2, y2);
+        sideArray[1] = getSideLength(x2, y2, x3, y3);
     }
 
     public double getY2() {
@@ -50,6 +56,8 @@ public class Triangle implements Shape {
 
     public void setY2(double y2) {
         this.y2 = y2;
+        sideArray[0] = getSideLength(x1, y1, x2, y2);
+        sideArray[1] = getSideLength(x2, y2, x3, y3);
     }
 
     public double getX3() {
@@ -58,6 +66,8 @@ public class Triangle implements Shape {
 
     public void setX3(double x3) {
         this.x3 = x3;
+        sideArray[2] = getSideLength(x1, y1, x3, y3);
+        sideArray[1] = getSideLength(x2, y2, x3, y3);
     }
 
     public double getY3() {
@@ -66,6 +76,8 @@ public class Triangle implements Shape {
 
     public void setY3(double y3) {
         this.y3 = y3;
+        sideArray[2] = getSideLength(x1, y1, x3, y3);
+        sideArray[1] = getSideLength(x2, y2, x3, y3);
     }
 
     private static double getSideLength(double x1, double y1, double x2, double y2) {
