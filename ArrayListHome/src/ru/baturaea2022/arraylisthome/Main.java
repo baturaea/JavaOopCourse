@@ -1,16 +1,15 @@
-package ru.baturaea2022.arraylisthome_main;
-
-import ru.baturaea2022.arraylisthome.ArrayListHome;
+package ru.baturaea2022.arraylisthome;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        ArrayListHome<Integer> list1 = new ArrayListHome<>();
+        ArrayList<Integer> list1 = new ArrayList<>();
 
-        try (Scanner scanner = new Scanner(new FileInputStream("ArrayListHome/src/ru/baturaea2022/arraylisthome_main/input.txt"))) {
+        try (Scanner scanner = new Scanner(new FileInputStream("ArrayListHome/src/ru/baturaea2022/arraylisthome/input.txt"))) {
             while (scanner.hasNextLine()) {
                 list1.add(scanner.nextInt());
             }
@@ -19,17 +18,17 @@ public class Main {
         System.out.println(list1);
 
         for (int i = 0; i < list1.size(); i++) {
-            if (((Integer) list1.get(i)) % 2 == 0) {
+            if (list1.get(i) % 2 == 0) {
                 list1.remove(i);
                 i--;
             }
         }
 
         System.out.println(list1);
-        ArrayListHome<Integer> list2 = new ArrayListHome<>();
+        ArrayList<Integer> list2 = new ArrayList<>();
 
         for (int i = 0; i < list1.size(); i++) {
-            Object element = list1.get(i);
+            Integer element = list1.get(i);
             boolean isRepeat = false;
 
             for (int j = 0; j < i; j++) {
@@ -40,7 +39,7 @@ public class Main {
             }
 
             if (!isRepeat) {
-                list2.add((Integer) element);
+                list2.add(element);
             }
         }
 
