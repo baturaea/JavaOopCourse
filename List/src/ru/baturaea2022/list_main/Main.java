@@ -43,7 +43,7 @@ public class Main {
         System.out.println(stringsList.getLength());
 
         System.out.println("================stringsList.setValue(1, stringsList.getValue(0));");
-        stringsList.setValue(0, stringsList.getValue(0));
+        stringsList.setValue(1, stringsList.getValue(0));
         System.out.println(stringsList);
         System.out.println(stringsList.getLength());
     }
