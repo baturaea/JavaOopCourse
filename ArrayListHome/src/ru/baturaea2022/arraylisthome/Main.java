@@ -47,8 +47,7 @@ public class Main {
             }
         }
 
-        System.out.println("Cписок без дубликатов: ");
+        System.out.println("Список без дубликатов: ");
         System.out.println(listUniquesElements);
     }
 }
-
