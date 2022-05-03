@@ -66,6 +66,7 @@ public class ArrayList<T> implements List<T> {
         int expectedModCount = modCount;
 
         public boolean hasNext() {
+
             return currentIndex + 1 < size;
         }
 
@@ -345,11 +346,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public String toString() {
+        if (size == 0) {
+            return "[]";
+        }
+
         StringBuilder builder = new StringBuilder();
+        builder.append("[");
 
         for (int i = 0; i < size; i++) {
             builder.append(items[i]);
-            builder.append(System.lineSeparator());
+
+            if (i == size -1) {
+                builder.append(']');
+                break;
+            }
+            builder.append(", ");
         }
 
         return builder.toString();

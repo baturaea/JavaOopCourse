@@ -1,180 +1,173 @@
 package ru.baturaea2022.list;
 
 public class List<T> {
-    private NodeList<T> head;
-    private int size = 0;
+    private ListNode<T> head;
+    private int size;
 
     public List() {
     }
 
-    public List(T value) {
-        this.head = new NodeList<>(value);
+    public List(T data) {
+        head = new ListNode<>(data);
         size = 1;
     }
 
-    public int getLength() {
+    public int getSize() {
         return size;
     }
 
-    public NodeList<T> getHead() {
-        return head;
-    }
-
-    public T getValue(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IllegalArgumentException("Component index = " + index
-                    + ", must be 0 or greater but less " + size);
+    public T getFirst() {
+        if (head == null) {
+            throw new IllegalStateException("The list is empty");
         }
 
-        int i = 0;
-
-        for (NodeList<T> p = head; p != null; p = p.getNext()) {
-            if (i == index) {
-                return p.getData();
-            }
-            i++;
-        }
-
-        assert head != null;
         return head.getData();
     }
 
-    public T setValue(int index, T value) {
-        if (index > size - 1 || index < 0) {
-            throw new IllegalArgumentException("Component index = " + index
-                    + ", must be 0 or greater but less " + size);
-        }
+    public T getData(int index) {
+        checkIndexInSize(index);
 
-        int i = 0;
+        ListNode<T> current = iterator(index);
 
-        for (NodeList<T> p = head; p != null; p = p.getNext()) {
-            if (i == index) {
-                T oldData = p.getData();
-                p.setData(value);
-
-                return oldData;
-            }
-
-            i++;
-        }
-
-        return null;
+        return current.getData();
     }
 
-    public T deleteFromHead() {
-        if (size == 1) {
-            throw new IllegalArgumentException("Can't remove head because the list is empty.");
-        }
+    public T setData(int index, T data) {
+        checkIndexInSize(index);
 
-        T oldData = head.getData();
-        head = head.getNext();
-        size--;
+        ListNode<T> current = iterator(index);
+
+        T oldData = current.getData();
+        current.setData(data);
 
         return oldData;
     }
 
-    public T deleteByIndex(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IllegalArgumentException("Component index = " + index
-                    + ", must be 0 or greater but less " + size);
+    public T deleteFirst() {
+        if (size < 1) {
+            throw new IllegalStateException("The list is empty");
         }
 
-        if (index == 0) {
-            return this.deleteFromHead();
-        }
+        T deletedData = head.getData();
+        head = head.getNext();
+        size--;
 
-        int i = 1;
-
-        for (NodeList<T> p = head.getNext(), prev = head; p != null; prev = p, p = p.getNext()) {
-            if (i == index) {
-                prev.setNext(p.getNext());
-                size--;
-                return p.getData();
-            }
-
-            i++;
-        }
-
-        return null;
+        return deletedData;
     }
 
-    public boolean deleteByValue(T value) {
-        for (NodeList<T> p = head, prev = null; p != null; prev = p, p = p.getNext()) {
-            if (p.getData().equals(value)) {
-                if (prev != null) {
-                    prev.setNext(p.getNext());
-                    size--;
-                    return true;
-                }
+    public T deleteByIndex(int index) {
+        checkIndexInSize(index);
 
-                head = p.getNext();
-                size--;
+        if (index == 0) {
+            return deleteFirst();
+        }
+
+        ListNode<T> previous = iterator(index - 1);
+        ListNode<T> deletedNode = previous.getNext();
+        previous.setNext(deletedNode.getNext());
+        size--;
+
+        return deletedNode.getData();
+    }
+
+    public boolean deleteByData(T data) {
+        int i = 0;
+
+        for (ListNode<T> current = head; current != null; current = current.getNext()) {
+            if (current.getData().equals(data)) {
+                deleteByIndex(i);
+
                 return true;
             }
+            i++;
         }
 
         return false;
     }
 
-    public void insertInHead(T value) {
-        head = new NodeList<>(value, head);
+    public void insertFirst(T data) {
+        head = new ListNode<>(data, head);
         size++;
     }
 
-    public void insert(int index, T value) {
-        if (index > size - 1 || index < 0) {
-            throw new IllegalArgumentException("Component index = " + index
-                    + ", must be 0 or greater but less " + size);
-        }
+    public void insert(int index, T data) {
+        checkIndexInSize(index);
 
         if (index == 0) {
-            this.insertInHead(value);
+            insertFirst(data);
         } else {
-            int i = 1;
-            NodeList<T> newNode = new NodeList<>(value);
+            ListNode<T> previous = iterator(index - 1);
+            ListNode<T> insertNode = new ListNode<>(data, previous.getNext());
+            previous.setNext(insertNode);
+            size++;
+        }
+    }
 
-            for (NodeList<T> p = head.getNext(), prev = head; p != null; prev = p, p = p.getNext()) {
-                if (i == index) {
-                    newNode.setNext(p);
-                    prev.setNext(newNode);
-                    size++;
-                    break;
-                }
+    public void rotate() {
+        if (getSize()>1){
+            ListNode<T> current = head.getNext();
+            head.setNext(null);
 
-                i++;
+            while (current != null) {
+                ListNode<T> next = current.getNext();
+                current.setNext(head);
+                head = current;
+                current = next;
             }
         }
     }
 
-    public void reversalList() {
-        NodeList<T> endNode = head;
-
-        for (NodeList<T> p = head.getNext(); p != null; p = p.getNext()) {
-            head = new NodeList<>(p.getData(), head);
-        }
-
-        endNode.setNext(null);
-    }
-
-    public List<T> copyList() {
+    public List<T> copy() {
         List<T> copyList = new List<>(head.getData());
+        ListNode<T> copyNode = copyList.head;
+        if (size > 1) {
+            ListNode<T> current = head.getNext();
 
-        for (NodeList<T> p = head.getNext(); p != null; p = p.getNext()) {
-            copyList.insertInHead(p.getData());
+            while (current != null) {
+                copyNode.setNext(new ListNode<>(current.getData(), null));
+                copyNode = copyNode.getNext();
+                copyList.size++;
+                current = current.getNext();
+            }
         }
-
-        copyList.reversalList();
 
         return copyList;
     }
 
+    private ListNode<T> iterator(int index) {
+        int i = 0;
+
+        for (ListNode<T> current = head; current != null; current = current.getNext()) {
+            if (i == index) {
+                return current;
+            }
+            i++;
+        }
+
+        return null;
+    }
+
+    private void checkIndexInSize(int index) {
+        if (index < 0 || index > size)
+            throw new IllegalArgumentException("Argument index = " + index + " must be 0 or greater but less " + size);
+    }
+
     @Override
     public String toString() {
+        if (size == 0) {
+            return "[]";
+        }
         StringBuilder builder = new StringBuilder();
+        builder.append("[");
 
-        for (NodeList<T> p = head; p != null; p = p.getNext()) {
-            builder.append(p.getData());
-            builder.append(System.lineSeparator());
+        for (ListNode<T> current = head; current != null; current = current.getNext()) {
+            builder.append(current.getData());
+
+            if (current.getNext() == null) {
+                builder.append(']');
+                break;
+            }
+            builder.append(", ");
         }
 
         return builder.toString();
