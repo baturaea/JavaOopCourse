@@ -50,9 +50,8 @@ public class Main {
         // Д) получить людей, возраст которых от 20 до 45, вывести в консоль их имена в порядке убывания возраста
         System.out.println();
         List<Person> rangeAgePersonsList = personsList.stream()
+                .filter(p -> p.getAge() >= 20 && p.getAge() <= 45)
                 .sorted(Comparator.comparing(Person::getAge).reversed())
-                .filter(p -> p.getAge() > 19)
-                .filter(p -> p.getAge() < 45)
                 .collect(Collectors.toList());
         System.out.println("Список людей, возраст которых от 20 до 45: " + rangeAgePersonsList);
     }
