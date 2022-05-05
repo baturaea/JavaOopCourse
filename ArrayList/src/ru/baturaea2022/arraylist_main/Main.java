@@ -1,4 +1,4 @@
-package ru.baturaea2022.ArrayList_main;
+package ru.baturaea2022.arraylist_main;
 
 import ru.baturaea2022.arraylist.ArrayList;
 
