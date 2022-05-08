@@ -13,13 +13,13 @@ public class Rectangle implements Shape {
         this.width = width;
     }
 
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
     @Override
     public double getWidth() {
         return width;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
     }
 
     @Override

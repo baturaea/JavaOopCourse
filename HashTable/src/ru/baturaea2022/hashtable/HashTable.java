@@ -81,7 +81,7 @@ public class HashTable<T> implements Collection<T> {
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] a) {
+    public <T> T[] toArray(T[] a) {
         return null;
     }
 
@@ -126,6 +126,8 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean addAll(Collection c) {
+
+
         return false;
     }
 
