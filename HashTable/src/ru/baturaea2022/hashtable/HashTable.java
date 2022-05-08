@@ -32,8 +32,13 @@ public class HashTable<T> implements Collection<T> {
     }
 
     @Override
-    public boolean contains(Object o) {
-        return false;
+    public boolean contains(Object element) {
+        int indexByHash = element.hashCode() % capacity;
+        if (items[indexByHash] == null) {
+            return false;
+        }
+
+        return items[indexByHash].contains(element);
     }
 
     @Override
@@ -60,6 +65,7 @@ public class HashTable<T> implements Collection<T> {
 
             ++currentIndex;
             int indexInList = currentIndex;
+
             for (int i = 0; i < capacity; i++) {
                 if (items[i] != null) {
                     if (indexInList < items[i].size()) {
@@ -68,7 +74,6 @@ public class HashTable<T> implements Collection<T> {
 
                     indexInList -= items[i].size();
                 }
-
             }
 
             return null;
@@ -77,12 +82,39 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] resultArray = new Object[count];
+        int j = 0;
+
+        for (int i = 0; i < capacity; i++) {
+            if (items[i] != null) {
+                for (Object element : items[i]) {
+                    resultArray[j] = element;
+                    j++;
+                }
+            }
+        }
+
+        return resultArray;
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
-        return null;
+    public <T> T[] toArray(T[] array) {
+        T[] resultArray = (T[]) new Object[count];
+        int j = 0;
+
+        for (T element : array) {
+            int indexByHash = element.hashCode() % capacity;
+            if (items[indexByHash] != null) {
+                for (Object item : items[indexByHash]) {
+                    if (item.equals(element)) {
+                        resultArray[j] = element;
+                        j++;
+                    }
+                }
+            }
+        }
+
+        return resultArray;
     }
 
     @Override
@@ -92,11 +124,14 @@ public class HashTable<T> implements Collection<T> {
             items[indexByHash] = new ArrayList<T>();
         }
 
-        items[indexByHash].add(element);
-        count++;
-        modCount++;
+        if (items[indexByHash].add(element)) {
+            count++;
+            modCount++;
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -107,8 +142,14 @@ public class HashTable<T> implements Collection<T> {
         }
 
         if (items[indexByHash].remove(o)) {
+            if (items[indexByHash].size() == 0) {
+                items[indexByHash] = null;
+            }
+
             count--;
             modCount++;
+
+            return true;
         }
 
         return false;
@@ -126,23 +167,117 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean addAll(Collection c) {
+        T[] arrayFromCollection = (T[]) c.toArray();
+        int length = arrayFromCollection.length;
+        if (length == 0) {
+            return false;
+        }
 
+        for (T element : arrayFromCollection) {
+            if (!add(element)) {
+                return false;
+            }
+        }
 
-        return false;
+        return true;
     }
 
     @Override
     public boolean retainAll(Collection c) {
-        return false;
+        //TODO переделать, падает
+        T[] arrayFromCollection = (T[]) c.toArray();
+        if (arrayFromCollection.length == 0) {
+            return false;
+        }
+
+        for (int i = 0; ; i++) {
+            if (i == arrayFromCollection.length) {
+                return false;
+            }
+
+            if (contains(arrayFromCollection[i])) {
+                break;
+            }
+        }
+
+        boolean hasInItems = false;
+
+        for (int i = 0; i < capacity; i++) {
+            if (items[i] != null) {
+                for(Object item : items[i]) {
+                    for (T element : arrayFromCollection) {
+                        if (element.equals(item)) {
+                            hasInItems = true;
+                            break;
+                        }
+                    }
+
+                    if(!hasInItems) {
+                        remove(item);
+                        hasInItems = false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override
     public boolean removeAll(Collection c) {
-        return false;
+        T[] arrayFromCollection = (T[]) c.toArray();
+        int length = arrayFromCollection.length;
+        if (length == 0) {
+            return false;
+        }
+
+        for (T element : arrayFromCollection) {
+            if (!remove(element)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
     public boolean containsAll(Collection c) {
-        return false;
+        T[] arrayFromCollection = (T[]) c.toArray();
+        if (arrayFromCollection.length == 0) {
+            return false;
+        }
+
+        for (T e : arrayFromCollection) {
+            if (!contains(e)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        if (count == 0) {
+            return "[]";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+
+        Iterator<T> iterator = this.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+
+            builder.append(iterator.next());
+            if (i == count - 1) {
+                builder.append(']');
+                break;
+            }
+            builder.append(", ");
+            i++;
+        }
+
+        return builder.toString();
     }
 }
