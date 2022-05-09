@@ -39,5 +39,8 @@ public class Main {
         System.out.println("table.retainAll(collection):");
         System.out.println(table.retainAll(collection));
         System.out.println(table);
+
+        System.out.println("table.size():");
+        System.out.println(table.size());
     }
 }
