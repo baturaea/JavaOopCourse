@@ -20,9 +20,9 @@ public class Main {
             System.out.println("Прочитанный из файла список:");
             System.out.println(fileStringsList);
         } catch (FileNotFoundException e) {
-            System.out.println("File " + inputFile + " not found!");
+            System.out.println("File " + inputFile + " not found.");
         } catch (IOException e) {
-            System.out.println("File processing error");
+            System.out.println("File processing error.");
         }
 
         // Есть список из целых чисел. Удалить из него все четные числа.
