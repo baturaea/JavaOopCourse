@@ -25,18 +25,18 @@ public class Main {
 
         List<Integer> collection = Arrays.asList(2, 4, 5, 6);
 
-        System.out.println("table.addAll(collection): 2,4,5,6");
+        System.out.println("table.addAll(collection): 2, 4, 5, 6");
         System.out.println(table.addAll(collection));
         System.out.println(table);
 
-        System.out.println("table.containsAll(collection):");
+        System.out.println("table.containsAll(collection): 2, 4, 5, 6");
         System.out.println(table.containsAll(collection));
 
-        System.out.println("table.removeAll(collection):");
+        System.out.println("table.removeAll(collection): 2, 4, 5, 6");
         System.out.println(table.removeAll(collection));
         System.out.println(table);
 
-        System.out.println("table.retainAll(collection):");
+        System.out.println("table.retainAll(collection): 2, 4, 5, 6");
         System.out.println(table.retainAll(collection));
         System.out.println(table);
 

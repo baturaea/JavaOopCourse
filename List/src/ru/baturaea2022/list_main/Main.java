@@ -6,8 +6,9 @@ public class Main {
     public static void main(String[] args) {
         List<String> stringsList = new List<>("qwe");
 
+
         stringsList.insertFirst("rew");
-        stringsList.insertFirst("rew1");
+        stringsList.insertFirst(null);
         stringsList.insertFirst("rew4");
 
         System.out.println(stringsList);
@@ -29,18 +30,19 @@ public class Main {
         System.out.println(copyStringsList.getSize());
 
         System.out.println("================reversalList");
-        stringsList.rotate();
+        stringsList.reverse();
         System.out.println(stringsList);
         System.out.println(stringsList.getSize());
 
-        System.out.println("================deleteByValue(rew1)");
-        stringsList.deleteByData("rew1");
+        System.out.println("================deleteByValue(rew4)");
+        System.out.println(stringsList.deleteByData("rew4"));
         System.out.println(stringsList);
         System.out.println(stringsList.getSize());
 
         System.out.println("================deleteByIndex(1)");
-        stringsList.deleteByIndex(1);
+        System.out.println(stringsList.deleteByIndex(1));
         System.out.println(stringsList);
+        System.out.println(stringsList.getSize());
 
         System.out.println("================deleteFromHead");
         stringsList.deleteFirst();

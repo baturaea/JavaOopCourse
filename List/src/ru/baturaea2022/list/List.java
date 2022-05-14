@@ -1,5 +1,7 @@
 package ru.baturaea2022.list;
 
+import java.util.NoSuchElementException;
+
 public class List<T> {
     private ListNode<T> head;
     private int size;
@@ -25,27 +27,27 @@ public class List<T> {
     }
 
     public T getData(int index) {
-        checkIndexInSize(index);
+        checkIndex(index, false);
 
-        ListNode<T> current = iterator(index);
+        ListNode<T> currentNode = getNode(index);
 
-        return current.getData();
+        return currentNode.getData();
     }
 
     public T setData(int index, T data) {
-        checkIndexInSize(index);
+        checkIndex(index, false);
 
-        ListNode<T> current = iterator(index);
+        ListNode<T> currentNode = getNode(index);
 
-        T oldData = current.getData();
-        current.setData(data);
+        T oldData = currentNode.getData();
+        currentNode.setData(data);
 
         return oldData;
     }
 
     public T deleteFirst() {
         if (size < 1) {
-            throw new IllegalStateException("The list is empty");
+            throw new NoSuchElementException("The list is empty");
         }
 
         T deletedData = head.getData();
@@ -56,30 +58,43 @@ public class List<T> {
     }
 
     public T deleteByIndex(int index) {
-        checkIndexInSize(index);
+        checkIndex(index, false);
 
         if (index == 0) {
             return deleteFirst();
         }
 
-        ListNode<T> previous = iterator(index - 1);
-        ListNode<T> deletedNode = previous.getNext();
-        previous.setNext(deletedNode.getNext());
+        ListNode<T> previousNode = getNode(index - 1);
+        ListNode<T> deletedNode = previousNode.getNext();
+        previousNode.setNext(deletedNode.getNext());
         size--;
 
         return deletedNode.getData();
     }
 
     public boolean deleteByData(T data) {
-        int i = 0;
+        if (size == 0) {
+            return false;
+        }
+        ListNode<T> currentNode = head;
+        ListNode<T> previousNode = null;
+        while (currentNode != null) {
+            if (currentNode.getData() == data || (currentNode.getData() != null && currentNode.getData().equals(data))) {
+                if (previousNode != null) {
+                    previousNode.setNext(currentNode.getNext());
+                    size--;
 
-        for (ListNode<T> current = head; current != null; current = current.getNext()) {
-            if (current.getData().equals(data)) {
-                deleteByIndex(i);
+                    return true;
+                }
+
+                head = currentNode.getNext();
+                size--;
 
                 return true;
             }
-            i++;
+
+            previousNode = currentNode;
+            currentNode = currentNode.getNext();
         }
 
         return false;
@@ -91,65 +106,70 @@ public class List<T> {
     }
 
     public void insert(int index, T data) {
-        checkIndexInSize(index);
+        checkIndex(index, true);
 
         if (index == 0) {
             insertFirst(data);
-        } else {
-            ListNode<T> previous = iterator(index - 1);
-            ListNode<T> insertNode = new ListNode<>(data, previous.getNext());
-            previous.setNext(insertNode);
-            size++;
+
+            return;
         }
+
+        ListNode<T> previousNode = getNode(index - 1);
+        previousNode.setNext(new ListNode<>(data, previousNode.getNext()));
+        size++;
     }
 
-    public void rotate() {
-        if (getSize()>1){
-            ListNode<T> current = head.getNext();
-            head.setNext(null);
+    public void reverse() {
+        if (getSize() < 2) {
+            return;
+        }
 
-            while (current != null) {
-                ListNode<T> next = current.getNext();
-                current.setNext(head);
-                head = current;
-                current = next;
-            }
+        ListNode<T> currentNode = head.getNext();
+        head.setNext(null);
+
+        while (currentNode != null) {
+            ListNode<T> next = currentNode.getNext();
+            currentNode.setNext(head);
+            head = currentNode;
+            currentNode = next;
         }
     }
 
     public List<T> copy() {
-        List<T> copyList = new List<>(head.getData());
-        ListNode<T> copyNode = copyList.head;
-        if (size > 1) {
-            ListNode<T> current = head.getNext();
-
-            while (current != null) {
-                copyNode.setNext(new ListNode<>(current.getData(), null));
-                copyNode = copyNode.getNext();
-                copyList.size++;
-                current = current.getNext();
-            }
+        if (size == 0) {
+            return null;
         }
 
+        ListNode<T> currentNode = head;
+        List<T> copyList = new List<>(currentNode.getData());
+        ListNode<T> copyNode = copyList.head;
+        copyList.size = size;
+
+        while (currentNode.getNext() != null) {
+            copyNode.setNext(new ListNode<>(currentNode.getNext().getData(), null));
+            copyNode = copyNode.getNext();
+            currentNode = currentNode.getNext();
+        }
         return copyList;
     }
 
-    private ListNode<T> iterator(int index) {
-        int i = 0;
+    private ListNode<T> getNode(int index) {
+        checkIndex(index, false);
+        ListNode<T> currentNode = head;
 
-        for (ListNode<T> current = head; current != null; current = current.getNext()) {
-            if (i == index) {
-                return current;
-            }
-            i++;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.getNext();
         }
 
-        return null;
+        return currentNode;
     }
 
-    private void checkIndexInSize(int index) {
-        if (index < 0 || index > size)
-            throw new IllegalArgumentException("Argument index = " + index + " must be 0 or greater but less " + size);
+    private void checkIndex(int index, boolean isAdding) {
+        int maxIndex = isAdding ? size : size - 1;
+
+        if (index < 0 || index > maxIndex) {
+            throw new IndexOutOfBoundsException("Index = " + index + " out of range [0 , " + maxIndex + "]");
+        }
     }
 
     @Override
@@ -157,18 +177,17 @@ public class List<T> {
         if (size == 0) {
             return "[]";
         }
+
         StringBuilder builder = new StringBuilder();
         builder.append("[");
 
-        for (ListNode<T> current = head; current != null; current = current.getNext()) {
-            builder.append(current.getData());
-
-            if (current.getNext() == null) {
-                builder.append(']');
-                break;
-            }
+        for (ListNode<T> currentNode = head; currentNode != null; currentNode = currentNode.getNext()) {
+            builder.append(currentNode.getData());
             builder.append(", ");
         }
+
+        builder.setLength(builder.length() - 2);
+        builder.append(']');
 
         return builder.toString();
     }

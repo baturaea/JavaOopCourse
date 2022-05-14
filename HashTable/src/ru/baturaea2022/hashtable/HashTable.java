@@ -3,20 +3,22 @@ package ru.baturaea2022.hashtable;
 import java.util.*;
 
 public class HashTable<T> implements Collection<T> {
+    private static final int DEFAULT_CAPACITY = 10;
     private int count;
     private int modCount;
-    private static final int DEFAULT_CAPACITY = 10;
     private final int capacity;
-    private final ArrayList[] items;
+    private final ArrayList<T>[] items;
 
     public HashTable(int capacity) {
         this.capacity = capacity;
+        //noinspection unchecked
         items = new ArrayList[capacity];
 
     }
 
     public HashTable() {
         capacity = DEFAULT_CAPACITY;
+        //noinspection unchecked
         items = new ArrayList[capacity];
 
     }
@@ -54,7 +56,6 @@ public class HashTable<T> implements Collection<T> {
             return currentIndex + 1 < count;
         }
 
-        @SuppressWarnings("unchecked")
         public T next() {
             if (modCount != expectedModCount) {
                 throw new ConcurrentModificationException();
@@ -70,7 +71,7 @@ public class HashTable<T> implements Collection<T> {
             for (int i = 0; i < capacity; i++) {
                 if (items[i] != null) {
                     if (indexInList < items[i].size()) {
-                        return (T) items[i].get(indexInList);
+                        return items[i].get(indexInList);
                     }
 
                     indexInList -= items[i].size();
@@ -99,33 +100,45 @@ public class HashTable<T> implements Collection<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T1> T1[] toArray(T1[] array) {
-        T1[] resultArray = (T1[]) new Object[count];
+        if (array.length < count) {
 
-        int j = 0;
-
-        for (T1 element : array) {
-            int indexByHash = element.hashCode() % capacity;
-            if (items[indexByHash] != null) {
-                for (Object item : items[indexByHash]) {
-                    if (item.equals(element)) {
-                        resultArray[j] = element;
+            for (int i = 0, j = 0; i < capacity; i++) {
+                if (items[i] != null) {
+                    for (Object element : items[i]) {
+                        if (j == array.length) {
+                            return array;
+                        }
+                        //noinspection unchecked
+                        array[j] = (T1) element;
                         j++;
                     }
                 }
             }
         }
 
-        return resultArray;
+        for (int i = 0, j = 0; i < capacity; i++) {
+            if (items[i] != null) {
+                for (Object element : items[i]) {
+                    //noinspection unchecked
+                    array[j] = (T1) element;
+                    j++;
+                }
+            }
+        }
+
+        if (array.length > count) {
+            array[count] = null;
+        }
+
+        return array;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean add(T element) {
         int indexByHash = element.hashCode() % capacity;
         if (items[indexByHash] == null) {
-            items[indexByHash] = new ArrayList<T>();
+            items[indexByHash] = new ArrayList<>();
         }
 
         if (items[indexByHash].add(element)) {
@@ -170,16 +183,14 @@ public class HashTable<T> implements Collection<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean addAll(Collection c) {
-        T[] arrayFromCollection = (T[]) c.toArray();
-        int length = arrayFromCollection.length;
-        if (length == 0) {
+        if (c.size() == 0) {
             return false;
         }
 
-        for (T element : arrayFromCollection) {
-            if (!add(element)) {
+        for (Object element : c) {
+            //noinspection unchecked
+            if (!add((T) element)) {
                 return false;
             }
         }
@@ -188,73 +199,65 @@ public class HashTable<T> implements Collection<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean retainAll(Collection c) {
-        T[] arrayFromCollection = (T[]) c.toArray();
-        if (arrayFromCollection.length == 0) {
-            return false;
-        }
-
-        for (int i = 0; ; i++) {
-            if (i == arrayFromCollection.length) {
-                return false;
-            }
-
-            if (contains(arrayFromCollection[i])) {
-                break;
-            }
-        }
+        int expectedModCount = modCount;
 
         for (int i = 0; i < capacity; i++) {
             if (items[i] != null) {
                 int beforeSize = items[i].size();
-                items[i].retainAll(c);
-                int afterSize = items[i].size();
+
+                if (items[i].retainAll(c)) {
+                    count -= (beforeSize - items[i].size());
+                    modCount += beforeSize - items[i].size();
+                }
+
                 if (items[i].size() == 0) {
                     items[i] = null;
                 }
-
-                count -= (beforeSize - afterSize);
-                modCount++;
             }
         }
 
-        return true;
+        return (expectedModCount != modCount);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean removeAll(Collection c) {
-        T[] arrayFromCollection = (T[]) c.toArray();
-        int length = arrayFromCollection.length;
-        if (length == 0) {
+        if (c.size() == 0) {
             return false;
         }
+        int expectedModCount = modCount;
 
-        for (T element : arrayFromCollection) {
-            if (!remove(element)) {
-                return false;
+        for (int i = 0; i < capacity; i++) {
+            if (items[i] != null) {
+                int beforeSize = items[i].size();
+
+                if (items[i].removeAll(c)) {
+                    count -= (beforeSize - items[i].size());
+                    modCount += beforeSize - items[i].size();
+                }
+
+                if (items[i].size() == 0) {
+                    items[i] = null;
+                }
             }
         }
 
-        return true;
+        return (expectedModCount != modCount);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean containsAll(Collection c) {
-        T[] arrayFromCollection = (T[]) c.toArray();
-        if (arrayFromCollection.length == 0) {
+        if (c.size() == 0) {
             return false;
         }
 
-        for (T e : arrayFromCollection) {
-            if (!contains(e)) {
-                return false;
+        for (T element : this) {
+            if (c.contains(element)) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -266,18 +269,13 @@ public class HashTable<T> implements Collection<T> {
         StringBuilder builder = new StringBuilder();
         builder.append("[");
 
-        Iterator<T> iterator = this.iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-
-            builder.append(iterator.next());
-            if (i == count - 1) {
-                builder.append(']');
-                break;
-            }
+        for (T element : this) {
+            builder.append(element);
             builder.append(", ");
-            i++;
         }
+
+        builder.setLength(builder.length() - 2);
+        builder.append(']');
 
         return builder.toString();
     }
